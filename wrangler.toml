@@ -1,0 +1,22 @@
+name = "hello-worker"
+main = "src/worker.ts"
+compatibility_date = "2025-11-01"
+
+[ai]
+binding = "AI"
+
+[[durable_objects.bindings]]
+name = "SessionDO"
+class_name = "SessionDurableObject"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["SessionDurableObject"]
+
+[[workflows]]
+name = "chat-workflow"
+class_name = "ChatWorkflow"
+binding = "MY_WORKFLOW"
+
+[vars]
+__WORKER_NAME__ = "hello-worker"

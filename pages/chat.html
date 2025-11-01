@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Cloudflare AI Chat</title>
+<style>
+  body{font-family:system-ui;margin:24px;max-width:720px}
+  #log{white-space:pre-wrap;border:1px solid #ddd;padding:12px;border-radius:8px;min-height:160px}
+  .row{display:flex;gap:8px;margin-top:8px}
+  input{flex:1;padding:10px;border-radius:8px;border:1px solid #ccc}
+  button{padding:10px 14px;border-radius:8px;border:1px solid #999;cursor:pointer}
+</style>
+<h1>Cloudflare AI Chat (Llama 3.3)</h1>
+<div id="log">Say something 👇</div>
+<div class="row">
+  <input id="msg" placeholder="Type message..." />
+  <button id="send">Send</button>
+</div>
+<script>
+
+  const API = "https://hello-worker.maitreyasanjay-vaghulade.workers.dev/chat"; // same zone if proxied together
+  const log = document.getElementById("log");
+  const msg = document.getElementById("msg");
+  const send = document.getElementById("send");
+  const sessionId = "demo";
+  send.onclick = async () => {
+    const m = msg.value.trim();
+    if (!m) return;
+    append(`You: ${m}`);
+    msg.value = "";
+    const r = await fetch(API, {
+      method: "POST",
+      headers: {"content-type":"application/json"},
+      body: JSON.stringify({ message: m, sessionId })
+    });
+    const j = await r.json();
+    append(`AI: ${j.reply}`);
+  };
+  function append(t){ log.textContent += "\n" + t; }
+</script>
